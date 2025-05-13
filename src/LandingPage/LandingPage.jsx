@@ -15,9 +15,9 @@ const slideUp = {
 
 export default function LandingPage() {
   return (
-    <div className="min-h-screen bg-white font-sans antialiased">
+    <div className="min-h-screen bg- font-sans antialiased">
       {/* Glass Navbar */}
-      <nav className="fixed w-full bg-white/80 backdrop-blur-md z-50 border-b border-gray-100">
+      <nav className="fixed w-full bg-emerald-900/50 backdrop-blur-md z-50 ">
         <div className="container mx-auto px-5 py-3 flex justify-between items-center">
           <motion.div 
             initial={{ opacity: 0 }}
@@ -26,14 +26,14 @@ export default function LandingPage() {
             className="flex items-center space-x-2"
           >
             <div className="w-9 h-9 rounded-lg bg-gradient-to-r from-emerald-500 to-teal-500 flex items-center justify-center text-white font-bold shadow-sm">LK</div>
-            <span className="text-lg font-semibold text-emerald-600">Ladokart</span>
+            <span className="text-lg font-semibold text-white">Ladokart</span>
           </motion.div>
           
           <div className="hidden md:flex items-center space-x-6">
-            <Link to="/how-it-works" className="text-gray-600 hover:text-emerald-600 text-sm font-medium transition">How it works</Link>
-            <Link to="/login" className="text-gray-600 hover:text-emerald-600 text-sm font-medium transition">Sign In</Link>
+            <Link to="/how-it-works" className="text-white hover:text-teal-500 text-xl font-medium transition">How it works</Link>
+            <Link to="/login" className="text-white hover:text-teal-500 text-xl font-medium transition">Sign In</Link>
             <motion.div whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.98 }}>
-              <Link to="/register" className="bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-600 hover:to-teal-600 text-white text-sm font-medium px-4 py-2 rounded-lg transition shadow-sm hover:shadow-md">
+              <Link to="/register" className="bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-600 hover:to-teal-600 text-white text-xl font-medium px-4 py-2 rounded-lg transition shadow-sm hover:shadow-md">
                 Join Now
               </Link>
             </motion.div>
@@ -88,24 +88,15 @@ export default function LandingPage() {
             <motion.div 
               variants={slideUp}
               transition={{ delay: 0.4 }}
-              className="flex flex-col sm:flex-row gap-3 justify-center"
+              className="flex justify-center"
             >
               <motion.div whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.98 }}>
                 <Link
                   to="/register"
-                  className="bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-600 hover:to-teal-600 text-white font-medium px-6 py-3 rounded-lg transition shadow-lg hover:shadow-xl flex items-center justify-center space-x-2"
+                  className="bg-white/10 backdrop-blur-sm border border-white/20 hover:bg-white/20 text-white font-medium px-6 py-3 rounded-lg transition flex items-center justify-center space-x-2"
                 >
                   <span>Get Early Access</span>
                   <FiChevronRight className="w-4 h-4" />
-                </Link>
-              </motion.div>
-              
-              <motion.div whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.98 }}>
-                <Link
-                  to="/browse"
-                  className="bg-white/10 backdrop-blur-sm border border-white/20 hover:bg-white/20 text-white font-medium px-6 py-3 rounded-lg transition flex items-center justify-center space-x-2"
-                >
-                  <span>See How It Works</span>
                 </Link>
               </motion.div>
             </motion.div>
