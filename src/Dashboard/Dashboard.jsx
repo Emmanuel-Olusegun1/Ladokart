@@ -62,7 +62,7 @@ export default function Dashboard() {
             <FiShoppingCart className="mr-3" />
             Marketplace
           </a>
-          <a href="#" className="flex items-center px-4 py-3 text-gray-600 hover:bg-gray-100 rounded-lg">
+          <a href="/marketplace" className="flex items-center px-4 py-3 text-gray-600 hover:bg-gray-100 rounded-lg">
             <FiMessageSquare className="mr-3" />
             Messages
           </a>
