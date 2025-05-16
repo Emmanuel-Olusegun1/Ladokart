@@ -7,7 +7,8 @@ import HowItWorks from './LandingPage/HowItWorks.jsx';
 import Categories from './LandingPage/Categories.jsx';
 import SignIn from './AuthPages/SignIn.jsx';
 import SignUp from './AuthPages/SignUp.jsx';
-
+import Dashboard from './Dashboard/Dashboard.jsx';
+import Marketplace from './Dashboard/Marketplace.jsx';
 
 
 function App() {
@@ -21,6 +22,8 @@ function App() {
      <Route path="/categories" element={<Categories />} />
      <Route path="/login" element={<SignIn />} />
      <Route path="/register" element={<SignUp />} />
+     <Route path="/dashboard" element={<Dashboard />} />
+     <Route path="/marketplace" element={<Marketplace />} />
 
      </Routes>
      </BrowserRouter>

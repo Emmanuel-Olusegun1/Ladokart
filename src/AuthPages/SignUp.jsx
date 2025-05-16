@@ -11,7 +11,6 @@ export default function SignUp() {
     email: '',
     password: '',
     confirmPassword: '',
-    matricNumber: ''
   });
   const [showPassword, setShowPassword] = useState(false);
   const [errors, setErrors] = useState({});
@@ -37,11 +36,6 @@ export default function SignUp() {
       newErrors.email = 'Please use your LAUTECH email';
     }
     
-    if (!formData.matricNumber) newErrors.matricNumber = 'Matric number is required';
-    else if (!/^[A-Za-z]{3}\/\d{2}\/\d{4}$/.test(formData.matricNumber)) {
-      newErrors.matricNumber = 'Format: XXX/YY/ZZZZ (e.g., CSC/20/1234)';
-    }
-    
     if (!formData.password) newErrors.password = 'Password is required';
     else if (formData.password.length < 6) newErrors.password = 'Password must be at least 6 characters';
     
@@ -60,221 +54,271 @@ export default function SignUp() {
       // Simulate API call
       await new Promise(resolve => setTimeout(resolve, 1500));
       setIsLoading(false);
-      navigate('/verify-email'); // Or dashboard if no verification needed
+      navigate('/verify-email');
     }
   };
 
   const handleGoogleSignUp = () => {
-    // Implement Google SignUp with domain restriction
     console.log('Google sign-up initiated with LAUTECH domain restriction');
-    // Example with Firebase:
-    // const provider = new firebase.auth.GoogleAuthProvider();
-    // provider.setCustomParameters({ hd: 'lautech.edu.ng' });
-    // firebase.auth().signInWithPopup(provider);
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 flex items-center justify-center p-4">
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-white flex items-center justify-center p-4 sm:p-6">
       <motion.div 
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5 }}
+        transition={{ duration: 0.5, ease: "easeOut" }}
         className="w-full max-w-md"
       >
-        <div className="bg-white rounded-2xl shadow-xl overflow-hidden">
-          {/* Header */}
-          <div className="bg-gradient-to-r from-emerald-600 to-teal-600 p-6 text-center">
-            <h1 className="text-2xl font-bold text-white">Join Ladokart</h1>
-            <p className="text-emerald-100 mt-1">Create your student account</p>
+        <div className="bg-white rounded-2xl shadow-xl overflow-hidden border border-gray-100">
+          {/* Header with Branding */}
+          <div className="bg-gradient-to-r from-emerald-500 to-teal-600 p-8 text-center relative">
+            <div className="absolute top-4 left-4">
+              <div className="w-10 h-10 rounded-lg bg-white/20 flex items-center justify-center backdrop-blur-sm">
+                <FiUser className="text-white text-lg" />
+              </div>
+            </div>
+            <h1 className="text-2xl font-bold text-white">Create Your Account</h1>
+            <p className="text-emerald-100 mt-2">Join LAUTECH's student marketplace</p>
           </div>
 
           {/* Form Section */}
           <div className="p-8">
-            <form onSubmit={handleSubmit} className="space-y-4">
+            <form onSubmit={handleSubmit} className="space-y-5">
               {/* Name Fields */}
-              <div className="grid grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
-                  <label htmlFor="firstName" className="block text-sm font-medium text-gray-700 mb-1">
+                  <label htmlFor="firstName" className="block text-sm font-medium text-gray-700 mb-2">
                     First Name
                   </label>
-                  <div className="relative">
+                  <div className="relative rounded-lg shadow-sm">
                     <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                      <FiUser className="text-gray-400" />
+                      <FiUser className="h-5 w-5 text-gray-400" />
                     </div>
                     <input
                       id="firstName"
                       name="firstName"
                       type="text"
+                      autoComplete="given-name"
                       value={formData.firstName}
                       onChange={handleChange}
-                      className={`block w-full pl-10 pr-3 py-2 border ${errors.firstName ? 'border-red-500' : 'border-gray-300'} rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500`}
+                      className={`block w-full pl-10 pr-3 py-3 border ${errors.firstName ? 'border-red-300 text-red-900 placeholder-red-300 focus:ring-red-500 focus:border-red-500' : 'border-gray-300 placeholder-gray-400 focus:ring-emerald-500 focus:border-emerald-500'} rounded-lg focus:outline-none focus:ring-2 focus:ring-opacity-50 sm:text-sm`}
                       placeholder="John"
                     />
                   </div>
-                  {errors.firstName && <p className="mt-1 text-sm text-red-600">{errors.firstName}</p>}
+                  {errors.firstName && (
+                    <p className="mt-2 text-sm text-red-600">{errors.firstName}</p>
+                  )}
                 </div>
 
                 <div>
-                  <label htmlFor="lastName" className="block text-sm font-medium text-gray-700 mb-1">
+                  <label htmlFor="lastName" className="block text-sm font-medium text-gray-700 mb-2">
                     Last Name
                   </label>
-                  <div className="relative">
+                  <div className="relative rounded-lg shadow-sm">
                     <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                      <FiUser className="text-gray-400" />
+                      <FiUser className="h-5 w-5 text-gray-400" />
                     </div>
                     <input
                       id="lastName"
                       name="lastName"
                       type="text"
+                      autoComplete="family-name"
                       value={formData.lastName}
                       onChange={handleChange}
-                      className={`block w-full pl-10 pr-3 py-2 border ${errors.lastName ? 'border-red-500' : 'border-gray-300'} rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500`}
+                      className={`block w-full pl-10 pr-3 py-3 border ${errors.lastName ? 'border-red-300 text-red-900 placeholder-red-300 focus:ring-red-500 focus:border-red-500' : 'border-gray-300 placeholder-gray-400 focus:ring-emerald-500 focus:border-emerald-500'} rounded-lg focus:outline-none focus:ring-2 focus:ring-opacity-50 sm:text-sm`}
                       placeholder="Doe"
                     />
                   </div>
-                  {errors.lastName && <p className="mt-1 text-sm text-red-600">{errors.lastName}</p>}
+                  {errors.lastName && (
+                    <p className="mt-2 text-sm text-red-600">{errors.lastName}</p>
+                  )}
                 </div>
               </div>
 
-              {/* Matric Number */}
+              {/* Email Field */}
               <div>
-                <label htmlFor="matricNumber" className="block text-sm font-medium text-gray-700 mb-1">
-                  Matric Number
-                </label>
-                <input
-                  id="matricNumber"
-                  name="matricNumber"
-                  type="text"
-                  value={formData.matricNumber}
-                  onChange={handleChange}
-                  className={`block w-full px-3 py-2 border ${errors.matricNumber ? 'border-red-500' : 'border-gray-300'} rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500`}
-                  placeholder="CSC/20/1234"
-                />
-                {errors.matricNumber && <p className="mt-1 text-sm text-red-600">{errors.matricNumber}</p>}
-              </div>
-
-              {/* Email */}
-              <div>
-                <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">
+                <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-2">
                   LAUTECH Email
                 </label>
-                <div className="relative">
+                <div className="relative rounded-lg shadow-sm">
                   <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                    <FiMail className="text-gray-400" />
+                    <FiMail className="h-5 w-5 text-gray-400" />
                   </div>
                   <input
                     id="email"
                     name="email"
                     type="email"
+                    autoComplete="email"
                     value={formData.email}
                     onChange={handleChange}
-                    className={`block w-full pl-10 pr-3 py-2 border ${errors.email ? 'border-red-500' : 'border-gray-300'} rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500`}
+                    className={`block w-full pl-10 pr-3 py-3 border ${errors.email ? 'border-red-300 text-red-900 placeholder-red-300 focus:ring-red-500 focus:border-red-500' : 'border-gray-300 placeholder-gray-400 focus:ring-emerald-500 focus:border-emerald-500'} rounded-lg focus:outline-none focus:ring-2 focus:ring-opacity-50 sm:text-sm`}
                     placeholder="john.doe@lautech.edu.ng"
                   />
                 </div>
-                {errors.email && <p className="mt-1 text-sm text-red-600">{errors.email}</p>}
+                {errors.email && (
+                  <p className="mt-2 text-sm text-red-600">{errors.email}</p>
+                )}
               </div>
 
-              {/* Password */}
+              {/* Password Field */}
               <div>
-                <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-1">
+                <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-2">
                   Password
                 </label>
-                <div className="relative">
+                <div className="relative rounded-lg shadow-sm">
                   <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                    <FiLock className="text-gray-400" />
+                    <FiLock className="h-5 w-5 text-gray-400" />
                   </div>
                   <input
                     id="password"
                     name="password"
                     type={showPassword ? "text" : "password"}
+                    autoComplete="new-password"
                     value={formData.password}
                     onChange={handleChange}
-                    className={`block w-full pl-10 pr-10 py-2 border ${errors.password ? 'border-red-500' : 'border-gray-300'} rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500`}
+                    className={`block w-full pl-10 pr-10 py-3 border ${errors.password ? 'border-red-300 text-red-900 placeholder-red-300 focus:ring-red-500 focus:border-red-500' : 'border-gray-300 placeholder-gray-400 focus:ring-emerald-500 focus:border-emerald-500'} rounded-lg focus:outline-none focus:ring-2 focus:ring-opacity-50 sm:text-sm`}
                     placeholder="••••••••"
                   />
                   <button
                     type="button"
+                    className="absolute inset-y-0 right-0 pr-3 flex items-center"
                     onClick={() => setShowPassword(!showPassword)}
-                    className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-gray-600"
                   >
-                    {showPassword ? <FiEyeOff /> : <FiEye />}
+                    {showPassword ? (
+                      <FiEyeOff className="h-5 w-5 text-gray-400 hover:text-gray-500" />
+                    ) : (
+                      <FiEye className="h-5 w-5 text-gray-400 hover:text-gray-500" />
+                    )}
                   </button>
                 </div>
-                {errors.password && <p className="mt-1 text-sm text-red-600">{errors.password}</p>}
+                {errors.password && (
+                  <p className="mt-2 text-sm text-red-600">{errors.password}</p>
+                )}
               </div>
 
-              {/* Confirm Password */}
+              {/* Confirm Password Field */}
               <div>
-                <label htmlFor="confirmPassword" className="block text-sm font-medium text-gray-700 mb-1">
+                <label htmlFor="confirmPassword" className="block text-sm font-medium text-gray-700 mb-2">
                   Confirm Password
                 </label>
-                <div className="relative">
+                <div className="relative rounded-lg shadow-sm">
                   <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                    <FiLock className="text-gray-400" />
+                    <FiLock className="h-5 w-5 text-gray-400" />
                   </div>
                   <input
                     id="confirmPassword"
                     name="confirmPassword"
                     type={showPassword ? "text" : "password"}
+                    autoComplete="new-password"
                     value={formData.confirmPassword}
                     onChange={handleChange}
-                    className={`block w-full pl-10 pr-10 py-2 border ${errors.confirmPassword ? 'border-red-500' : 'border-gray-300'} rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500`}
+                    className={`block w-full pl-10 pr-10 py-3 border ${errors.confirmPassword ? 'border-red-300 text-red-900 placeholder-red-300 focus:ring-red-500 focus:border-red-500' : 'border-gray-300 placeholder-gray-400 focus:ring-emerald-500 focus:border-emerald-500'} rounded-lg focus:outline-none focus:ring-2 focus:ring-opacity-50 sm:text-sm`}
                     placeholder="••••••••"
                   />
                 </div>
-                {errors.confirmPassword && <p className="mt-1 text-sm text-red-600">{errors.confirmPassword}</p>}
+                {errors.confirmPassword && (
+                  <p className="mt-2 text-sm text-red-600">{errors.confirmPassword}</p>
+                )}
               </div>
 
+              {/* Terms Agreement */}
+              <div className="flex items-start">
+                <div className="flex items-center h-5">
+                  <input
+                    id="terms"
+                    name="terms"
+                    type="checkbox"
+                    required
+                    className="focus:ring-emerald-500 h-4 w-4 text-emerald-600 border-gray-300 rounded"
+                  />
+                </div>
+                <div className="ml-3 text-sm">
+                  <label htmlFor="terms" className="font-medium text-gray-700">
+                    I agree to the{' '}
+                    <Link to="/terms" className="text-emerald-600 hover:text-emerald-500">
+                      Terms of Service
+                    </Link>{' '}
+                    and{' '}
+                    <Link to="/privacy" className="text-emerald-600 hover:text-emerald-500">
+                      Privacy Policy
+                    </Link>
+                  </label>
+                </div>
+              </div>
+
+              {/* Submit Button */}
               <motion.button
                 type="submit"
                 whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.98 }}
                 disabled={isLoading}
-                className={`w-full flex justify-center items-center py-3 px-4 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white ${isLoading ? 'bg-emerald-400' : 'bg-emerald-600 hover:bg-emerald-700'} focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-emerald-500 transition`}
+                className={`w-full flex justify-center items-center py-3 px-4 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white ${isLoading ? 'bg-emerald-400 cursor-not-allowed' : 'bg-emerald-600 hover:bg-emerald-700'} focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-emerald-500 transition-colors duration-200`}
               >
                 {isLoading ? (
-                  'Creating account...'
+                  <span className="flex items-center">
+                    <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                    </svg>
+                    Creating account...
+                  </span>
                 ) : (
-                  <>
-                    <span>Sign Up</span>
-                    <FiArrowRight className="ml-2" />
-                  </>
+                  <span className="flex items-center">
+                    Create Account <FiArrowRight className="ml-2" />
+                  </span>
                 )}
               </motion.button>
             </form>
 
-            {/* Divider */}
-            <div className="relative my-6">
-              <div className="absolute inset-0 flex items-center">
-                <div className="w-full border-t border-gray-300"></div>
+            {/* Social Auth Divider */}
+            <div className="mt-8">
+              <div className="relative">
+                <div className="absolute inset-0 flex items-center">
+                  <div className="w-full border-t border-gray-300"></div>
+                </div>
+                <div className="relative flex justify-center text-sm">
+                  <span className="px-2 bg-white text-gray-500">Or sign up with</span>
+                </div>
               </div>
-              <div className="relative flex justify-center text-sm">
-                <span className="px-2 bg-white text-gray-500">Or sign up with</span>
+
+              {/* Google Auth Button */}
+              <div className="mt-6">
+                <motion.button
+                  onClick={handleGoogleSignUp}
+                  whileHover={{ y: -2 }}
+                  whileTap={{ scale: 0.98 }}
+                  className="w-full inline-flex justify-center items-center gap-3 py-2.5 px-4 border border-gray-300 rounded-lg shadow-sm bg-white text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-emerald-500 transition-all"
+                >
+                  <FcGoogle className="h-5 w-5" />
+                  <span>Google (LAUTECH only)</span>
+                </motion.button>
               </div>
             </div>
-
-            {/* Google Auth Button */}
-            <motion.button
-              onClick={handleGoogleSignUp}
-              whileHover={{ y: -2 }}
-              whileTap={{ scale: 0.98 }}
-              className="w-full flex items-center justify-center gap-2 bg-white border border-gray-200 rounded-lg py-2 px-4 text-sm font-medium hover:bg-gray-50 transition"
-            >
-              <FcGoogle className="text-lg" />
-              <span>Sign up with Google (LAUTECH only)</span>
-            </motion.button>
           </div>
 
           {/* Footer */}
-          <div className="bg-gray-50 px-8 py-6 text-center">
+          <div className="bg-gray-50 px-8 py-6 rounded-b-2xl text-center border-t border-gray-200">
             <p className="text-sm text-gray-600">
               Already have an account?{' '}
-              <Link to="/signin" className="font-medium text-emerald-600 hover:text-emerald-500">
-                Sign in here
+              <Link 
+                to="/login" 
+                className="font-medium text-emerald-600 hover:text-emerald-500 transition-colors"
+              >
+                Sign in instead
               </Link>
             </p>
           </div>
+        </div>
+
+        {/* Additional Help Link */}
+        <div className="mt-6 text-center">
+          <Link 
+            to="/help" 
+            className="text-sm font-medium text-gray-500 hover:text-gray-700 transition-colors"
+          >
+            Need help creating an account?
+          </Link>
         </div>
       </motion.div>
     </div>
