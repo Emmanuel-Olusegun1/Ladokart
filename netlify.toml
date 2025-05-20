@@ -9,7 +9,11 @@
 
 [build.environment]
   NODE_VERSION = "18"
-  
+
+  [context.production.environment]
+ VITE_APP_SUPABASE_URL= "https://xtpxmhyjcmiwxuuvtopj.supabase.co"
+VITE_APP_SUPABASE_ANON_KEY= "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inh0cHhtaHlqY21pd3h1dXZ0b3BqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDc3NzQ1NjEsImV4cCI6MjA2MzM1MDU2MX0.agBNUNHeGkordVdHFy9IC3-XZlQSTtuow46efl_iarc"
+
     [[redirects]]
   from = "/*"
   to = "/index.html"
