@@ -5,8 +5,25 @@
 [[headers]]
   for = "/*"
   [headers.values]
-    Content-Security-Policy = "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' https://res.cloudinary.com data:; media-src 'self' https://res.cloudinary.com https://aumwecuflxjndyrapnzx.supabase.co https://*.supabase.co blob: data:; connect-src 'self' https://res.cloudinary.com https://aumwecuflxjndyrapnzx.supabase.co; frame-src 'none'; object-src 'none'; base-uri 'self'; form-action 'self'"
-
+    Content-Security-Policy = """
+      default-src 'self';
+      script-src 'self' 'unsafe-inline' 'unsafe-eval';
+      style-src 'self' 'unsafe-inline' https://fonts.googleapis.com;
+      font-src 'self' https://fonts.gstatic.com;
+      img-src 'self' https://res.cloudinary.com data:;
+      media-src 'self' https://res.cloudinary.com https://*.supabase.co blob: data:;
+      connect-src 'self' 
+        https://res.cloudinary.com 
+        https://aumwecuflxjndyrapnzx.supabase.co 
+        https://xtpxmhyjcmiwxuuvtopj.supabase.co
+        https://*.supabase.co
+        https://*.supabase.in;
+      frame-src 'none';
+      object-src 'none';
+      base-uri 'self';
+      form-action 'self'
+    """
+    
 [build.environment]
   NODE_VERSION = "18"
 
