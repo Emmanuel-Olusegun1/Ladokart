@@ -7,12 +7,12 @@ import { createClient } from '@supabase/supabase-js';
 const supabaseUrl = 
   import.meta.env.VITE_SUPABASE_URL || 
   process.env.SUPABASE_URL ||
-//   'https://xtpxmhyjcmiwxuuvtopj.supabase.co'; // TEMPORARY - REMOVE AFTER TESTING
+ 'https://xtpxmhyjcmiwxuuvtopj.supabase.co'; // TEMPORARY - REMOVE AFTER TESTING
 
 const supabaseAnonKey = 
   import.meta.env.VITE_SUPABASE_ANON_KEY || 
   process.env.SUPABASE_ANON_KEY ||
-//   'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inh0cHhtaHlqY21pd3h1dXZ0b3BqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDc3NzQ1NjEsImV4cCI6MjA2MzM1MDU2MX0.agBNUNHeGkordVdHFy9IC3-XZlQSTtuow46efl_iarc'; // TEMPORARY - REMOVE AFTER TESTING
+'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inh0cHhtaHlqY21pd3h1dXZ0b3BqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDc3NzQ1NjEsImV4cCI6MjA2MzM1MDU2MX0.agBNUNHeGkordVdHFy9IC3-XZlQSTtuow46efl_iarc'; // TEMPORARY - REMOVE AFTER TESTING
 
 // Debug output
 console.log('Supabase Configuration Loaded:', {
