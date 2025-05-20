@@ -3,6 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { FiMail, FiLock, FiEye, FiEyeOff, FiArrowRight, FiUser } from 'react-icons/fi';
 import { FcGoogle } from 'react-icons/fc';
 import { motion } from 'framer-motion';
+import { supabase } from '../lib/supabaseClient';
 
 export default function SignIn() {
   const [email, setEmail] = useState('');
@@ -10,12 +11,13 @@ export default function SignIn() {
   const [showPassword, setShowPassword] = useState(false);
   const [errors, setErrors] = useState({});
   const [isLoading, setIsLoading] = useState(false);
+  const [authError, setAuthError] = useState(null);
   const navigate = useNavigate();
 
   const validateForm = () => {
     const newErrors = {};
     if (!email) newErrors.email = 'LAUTECH email is required';
-    else if (!email.endsWith('@lautech.edu.ng')) newErrors.email = 'Please use your LAUTECH email';
+    else if (!email.endsWith('@student.lautech.edu.ng')) newErrors.email = 'Please use your LAUTECH email';
     
     if (!password) newErrors.password = 'Password is required';
     else if (password.length < 6) newErrors.password = 'Password must be at least 6 characters';
@@ -26,18 +28,51 @@ export default function SignIn() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (validateForm()) {
-      setIsLoading(true);
-      // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 1500));
-      setIsLoading(false);
+    setAuthError(null);
+    
+    if (!validateForm()) return;
+    
+    setIsLoading(true);
+    
+    try {
+      const { data, error } = await supabase.auth.signInWithPassword({
+        email,
+        password
+      });
+      
+      if (error) throw error;
+      
+      // Successful login - redirect to dashboard
       navigate('/dashboard');
+      
+    } catch (error) {
+      console.error('Login error:', error);
+      setAuthError(error.message || 'Invalid email or password. Please try again.');
+    } finally {
+      setIsLoading(false);
     }
   };
 
-  const handleGoogleSignIn = () => {
-    // Google auth implementation would go here
-    console.log('Google sign-in initiated with LAUTECH domain restriction');
+  const handleGoogleSignIn = async () => {
+    setAuthError(null);
+    
+    try {
+      const { error } = await supabase.auth.signInWithOAuth({
+        provider: 'google',
+        options: {
+          queryParams: {
+            hd: 'student.lautech.edu.ng' // Restrict to LAUTECH domain
+          },
+          redirectTo: `${window.location.origin}/dashboard`
+        }
+      });
+      
+      if (error) throw error;
+      
+    } catch (error) {
+      console.error('Google sign-in error:', error);
+      setAuthError(error.message || 'Failed to sign in with Google. Please try again.');
+    }
   };
 
   return (
@@ -62,6 +97,13 @@ export default function SignIn() {
 
           {/* Form Section */}
           <div className="p-8">
+            {/* Display authentication error if any */}
+            {authError && (
+              <div className="mb-4 p-3 bg-red-50 text-red-700 rounded-lg text-sm">
+                {authError}
+              </div>
+            )}
+
             <form onSubmit={handleSubmit} className="space-y-6">
               {/* Email Field */}
               <div>
@@ -80,7 +122,7 @@ export default function SignIn() {
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     className={`block w-full pl-10 pr-3 py-3 border ${errors.email ? 'border-red-300 text-red-900 placeholder-red-300 focus:ring-red-500 focus:border-red-500' : 'border-gray-300 placeholder-gray-400 focus:ring-emerald-500 focus:border-emerald-500'} rounded-lg focus:outline-none focus:ring-2 focus:ring-opacity-50 sm:text-sm`}
-                    placeholder="your.name@lautech.edu.ng"
+                    placeholder="your.name@student.lautech.edu.ng"
                   />
                 </div>
                 {errors.email && (

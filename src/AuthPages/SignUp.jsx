@@ -3,6 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { FiUser, FiMail, FiLock, FiEye, FiEyeOff, FiArrowRight } from 'react-icons/fi';
 import { motion } from 'framer-motion';
 import { FcGoogle } from 'react-icons/fc';
+import { supabase } from '../lib/supabaseClient';
 
 export default function SignUp() {
   const [formData, setFormData] = useState({
@@ -15,6 +16,7 @@ export default function SignUp() {
   const [showPassword, setShowPassword] = useState(false);
   const [errors, setErrors] = useState({});
   const [isLoading, setIsLoading] = useState(false);
+  const [authError, setAuthError] = useState(null);
   const navigate = useNavigate();
 
   const handleChange = (e) => {
@@ -28,11 +30,11 @@ export default function SignUp() {
   const validateForm = () => {
     const newErrors = {};
     
-    if (!formData.firstName) newErrors.firstName = 'First name is required';
-    if (!formData.lastName) newErrors.lastName = 'Last name is required';
+    if (!formData.firstName.trim()) newErrors.firstName = 'First name is required';
+    if (!formData.lastName.trim()) newErrors.lastName = 'Last name is required';
     
-    if (!formData.email) newErrors.email = 'LAUTECH email is required';
-    else if (!formData.email.endsWith('@lautech.edu.ng')) {
+    if (!formData.email.trim()) newErrors.email = 'Email is required';
+    else if (!formData.email.endsWith('@student.lautech.edu.ng')) {
       newErrors.email = 'Please use your LAUTECH email';
     }
     
@@ -49,17 +51,61 @@ export default function SignUp() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (validateForm()) {
-      setIsLoading(true);
-      // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 1500));
+    setAuthError(null);
+    
+    if (!validateForm()) return;
+    
+    setIsLoading(true);
+    
+    try {
+      const { data, error } = await supabase.auth.signUp({
+        email: formData.email,
+        password: formData.password,
+        options: {
+          data: {
+            first_name: formData.firstName,
+            last_name: formData.lastName,
+          },
+          emailRedirectTo: `${window.location.origin}/dashboard`
+        }
+      });
+      
+      if (error) throw error;
+      
+      if (data.user?.identities?.length === 0) {
+        setAuthError('A confirmation email has been sent. Please verify your email to continue.');
+      } else {
+        navigate('/verify-email', { state: { email: formData.email } });
+      }
+      
+    } catch (error) {
+      console.error('Signup error:', error);
+      setAuthError(error.message || 'An error occurred during sign up. Please try again.');
+    } finally {
       setIsLoading(false);
-      navigate('/verify-email');
     }
   };
 
-  const handleGoogleSignUp = () => {
-    console.log('Google sign-up initiated with LAUTECH domain restriction');
+  const handleGoogleSignUp = async () => {
+    setAuthError(null);
+    
+    try {
+      const { error } = await supabase.auth.signInWithOAuth({
+        provider: 'google',
+        options: {
+          queryParams: {
+            hd: 'student.lautech.edu.ng'
+          },
+          redirectTo: `${window.location.origin}/dashboard`
+        }
+      });
+      
+      if (error) throw error;
+      
+    } catch (error) {
+      console.error('Google signup error:', error);
+      setAuthError(error.message || 'Failed to sign in with Google. Please try again.');
+    }
   };
 
   return (
@@ -84,6 +130,12 @@ export default function SignUp() {
 
           {/* Form Section */}
           <div className="p-8">
+            {authError && (
+              <div className="mb-4 p-3 bg-red-50 text-red-700 rounded-lg text-sm">
+                {authError}
+              </div>
+            )}
+
             <form onSubmit={handleSubmit} className="space-y-5">
               {/* Name Fields */}
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -153,7 +205,7 @@ export default function SignUp() {
                     value={formData.email}
                     onChange={handleChange}
                     className={`block w-full pl-10 pr-3 py-3 border ${errors.email ? 'border-red-300 text-red-900 placeholder-red-300 focus:ring-red-500 focus:border-red-500' : 'border-gray-300 placeholder-gray-400 focus:ring-emerald-500 focus:border-emerald-500'} rounded-lg focus:outline-none focus:ring-2 focus:ring-opacity-50 sm:text-sm`}
-                    placeholder="john.doe@lautech.edu.ng"
+                    placeholder="your@studient.lautech.edu.ng"
                   />
                 </div>
                 {errors.email && (
