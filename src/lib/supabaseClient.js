@@ -1,50 +1,55 @@
 // src/lib/supabaseClient.js
 import { createClient } from '@supabase/supabase-js';
 
-// Solution 1: Check multiple environment variable sources
-const getEnvVar = (key) => {
-  // Try Vite's import.meta.env first
-  if (import.meta.env[key]) return import.meta.env[key];
-  
-  // Try process.env (for Node during build)
-  if (process.env[key]) return process.env[key];
-  
-  // Try globalThis for runtime (Netlify injects here)
-  if (globalThis?.env?.[key]) return globalThis.env[key];
-  
-  return undefined;
-};
+// 1. First try Vite's import.meta.env (local development)
+// 2. Then try Netlify's process.env (production)
+// 3. Fallback to hardcoded values if both fail (remove after testing)
+const supabaseUrl = 
+  import.meta.env.VITE_SUPABASE_URL || 
+  process.env.SUPABASE_URL ||
+  'https://xtpxmhyjcmiwxuuvtopj.supabase.co'; // TEMPORARY - REMOVE AFTER TESTING
 
-const supabaseUrl = getEnvVar('VITE_SUPABASE_URL');
-const supabaseAnonKey = getEnvVar('VITE_SUPABASE_ANON_KEY');
+const supabaseAnonKey = 
+  import.meta.env.VITE_SUPABASE_ANON_KEY || 
+  process.env.SUPABASE_ANON_KEY ||
+  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inh0cHhtaHlqY21pd3h1dXZ0b3BqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDc3NzQ1NjEsImV4cCI6MjA2MzM1MDU2MX0.agBNUNHeGkordVdHFy9IC3-XZlQSTtuow46efl_iarc'; // TEMPORARY - REMOVE AFTER TESTING
 
 // Debug output
-console.log('Environment Sources:', {
-  'import.meta.env': import.meta.env,
-  'process.env': process.env,
-  'globalThis.env': globalThis?.env
+console.log('Supabase Configuration Loaded:', {
+  source: import.meta.env.VITE_SUPABASE_URL ? 'Vite (local)' : 
+         process.env.SUPABASE_URL ? 'Netlify (production)' : 
+         'Hardcoded (temporary)',
+  url: supabaseUrl ? `${supabaseUrl.substring(0, 25)}...` : 'MISSING',
+  key: supabaseAnonKey ? '***' + supabaseAnonKey.slice(-4) : 'MISSING'
 });
 
 if (!supabaseUrl || !supabaseAnonKey) {
-  const errorMessage = [
-    'Supabase configuration missing!',
-    'Expected environment variables:',
-    '- VITE_SUPABASE_URL',
-    '- VITE_SUPABASE_ANON_KEY',
-    '',
-    'Netlify setup:',
-    '1. Go to Site settings → Environment variables',
-    '2. Add both variables (no VITE_ prefix needed in Netlify)',
-    '3. Redeploy your site'
-  ].join('\n');
+  console.error('Current environment variables:', {
+    'import.meta.env': import.meta.env,
+    'process.env': process.env
+  });
   
-  throw new Error(errorMessage);
+  throw new Error(
+    `Supabase configuration missing!\n\n` +
+    `For local development:\n` +
+    `1. Create .env.local file in project root\n` +
+    `2. Add:\n` +
+    `VITE_SUPABASE_URL=https://your-project-ref.supabase.co\n` +
+    `VITE_SUPABASE_ANON_KEY=your-anon-key\n\n` +
+    `For Netlify production:\n` +
+    `1. Go to Site settings → Environment variables\n` +
+    `2. Add:\n` +
+    `SUPABASE_URL (value: your Supabase URL)\n` +
+    `SUPABASE_ANON_KEY (value: your anon key)\n` +
+    `3. Clear cache and redeploy`
+  );
 }
 
 export const supabase = createClient(supabaseUrl, supabaseAnonKey, {
   auth: {
     persistSession: true,
     autoRefreshToken: true,
-    detectSessionInUrl: true
+    detectSessionInUrl: true,
+    flowType: 'pkce'
   }
 });
