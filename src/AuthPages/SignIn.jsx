@@ -54,24 +54,21 @@ export default function SignIn() {
   };
 
   const handleGoogleSignIn = async () => {
-    setAuthError(null);
-    
     try {
       const { error } = await supabase.auth.signInWithOAuth({
         provider: 'google',
         options: {
+          redirectTo: `${window.location.origin}/auth/callback`,
           queryParams: {
-            hd: 'student.lautech.edu.ng' // Restrict to LAUTECH domain
-          },
-          redirectTo: `${window.location.origin}/dashboard`
+            access_type: 'offline',
+            prompt: 'consent',
+            hd: 'student.lautech.edu.ng' // Restrict to LAUTECH emails
+          }
         }
       });
-      
       if (error) throw error;
-      
     } catch (error) {
       console.error('Google sign-in error:', error);
-      setAuthError(error.message || 'Failed to sign in with Google. Please try again.');
     }
   };
 

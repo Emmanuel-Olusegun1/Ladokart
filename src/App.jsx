@@ -9,26 +9,26 @@ import SignIn from './AuthPages/SignIn.jsx';
 import SignUp from './AuthPages/SignUp.jsx';
 import Dashboard from './Dashboard/Dashboard.jsx';
 import Marketplace from './Dashboard/Marketplace.jsx';
-
+import AuthCallback from './AuthPages/AuthCallback.jsx'; // Add this import
 
 function App() {
   return (
     <>
      <BrowserRouter>
      <Routes>
-
-     <Route path="/" element={<LandingPage />} />
-     <Route path="/how-it-works" element={<HowItWorks />} />
-     <Route path="/categories" element={<Categories />} />
-     <Route path="/login" element={<SignIn />} />
-     <Route path="/register" element={<SignUp />} />
-     <Route path="/dashboard" element={<Dashboard />} />
-     <Route path="/marketplace" element={<Marketplace />} />
-
+       <Route path="/" element={<LandingPage />} />
+       <Route path="/how-it-works" element={<HowItWorks />} />
+       <Route path="/categories" element={<Categories />} />
+       <Route path="/login" element={<SignIn />} />
+       <Route path="/register" element={<SignUp />} />
+       {/* Add this new route */}
+       <Route path="/auth/callback" element={<AuthCallback />} />
+       <Route path="/dashboard" element={<Dashboard />} />
+       <Route path="/marketplace" element={<Marketplace />} />
      </Routes>
      </BrowserRouter>
     </>
   );
-};
+}
 
 export default App;

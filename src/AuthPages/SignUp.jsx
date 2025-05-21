@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { FiUser, FiMail, FiLock, FiEye, FiEyeOff, FiArrowRight } from 'react-icons/fi';
 import { motion } from 'framer-motion';
@@ -16,8 +16,28 @@ export default function SignUp() {
   const [showPassword, setShowPassword] = useState(false);
   const [errors, setErrors] = useState({});
   const [isLoading, setIsLoading] = useState(false);
+  const [isGoogleLoading, setIsGoogleLoading] = useState(false);
   const [authError, setAuthError] = useState(null);
   const navigate = useNavigate();
+
+  // Handle auth state changes for Google sign-in
+  useEffect(() => {
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event, session) => {
+      if (event === 'SIGNED_IN') {
+        if (session?.provider_token) {
+          // Verify LAUTECH email for Google sign-in
+          if (session.user.email?.endsWith('@student.lautech.edu.ng')) {
+            navigate('/dashboard');
+          } else {
+            await supabase.auth.signOut();
+            setAuthError('Please use your LAUTECH student email (@student.lautech.edu.ng)');
+          }
+        }
+      }
+    });
+
+    return () => subscription?.unsubscribe();
+  }, [navigate]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -87,24 +107,21 @@ export default function SignUp() {
   };
 
   const handleGoogleSignUp = async () => {
-    setAuthError(null);
-    
     try {
       const { error } = await supabase.auth.signInWithOAuth({
         provider: 'google',
         options: {
+          redirectTo: `${window.location.origin}/auth/callback`,
           queryParams: {
-            hd: 'student.lautech.edu.ng'
-          },
-          redirectTo: `${window.location.origin}/dashboard`
+            access_type: 'offline',
+            prompt: 'consent',
+            hd: 'student.lautech.edu.ng' // Restrict to LAUTECH emails
+          }
         }
       });
-      
       if (error) throw error;
-      
     } catch (error) {
-      console.error('Google signup error:', error);
-      setAuthError(error.message || 'Failed to sign in with Google. Please try again.');
+      console.error('Google sign-in error:', error);
     }
   };
 
@@ -205,7 +222,7 @@ export default function SignUp() {
                     value={formData.email}
                     onChange={handleChange}
                     className={`block w-full pl-10 pr-3 py-3 border ${errors.email ? 'border-red-300 text-red-900 placeholder-red-300 focus:ring-red-500 focus:border-red-500' : 'border-gray-300 placeholder-gray-400 focus:ring-emerald-500 focus:border-emerald-500'} rounded-lg focus:outline-none focus:ring-2 focus:ring-opacity-50 sm:text-sm`}
-                    placeholder="your@studient.lautech.edu.ng"
+                    placeholder="your@student.lautech.edu.ng"
                   />
                 </div>
                 {errors.email && (
@@ -340,10 +357,20 @@ export default function SignUp() {
                   onClick={handleGoogleSignUp}
                   whileHover={{ y: -2 }}
                   whileTap={{ scale: 0.98 }}
+                  disabled={isGoogleLoading}
                   className="w-full inline-flex justify-center items-center gap-3 py-2.5 px-4 border border-gray-300 rounded-lg shadow-sm bg-white text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-emerald-500 transition-all"
                 >
-                  <FcGoogle className="h-5 w-5" />
-                  <span>Google (LAUTECH only)</span>
+                  {isGoogleLoading ? (
+                    <svg className="animate-spin h-5 w-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                    </svg>
+                  ) : (
+                    <>
+                      <FcGoogle className="h-5 w-5" />
+                      <span>Google (LAUTECH only)</span>
+                    </>
+                  )}
                 </motion.button>
               </div>
             </div>
