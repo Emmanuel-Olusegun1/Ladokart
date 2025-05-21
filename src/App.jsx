@@ -11,7 +11,7 @@ import Dashboard from './Dashboard/Dashboard.jsx';
 import Marketplace from './Dashboard/Marketplace.jsx';
 import SellItem from './Dashboard/SellItem.jsx';
 import AuthCallback from './AuthPages/AuthCallback.jsx';
-// import InAppMessanger from './Dashboard/InAppMessanger.jsx';
+import InAppMessenger from './Dashboard/InAppMessenger.jsx';
 
 function App() {
   return (
@@ -27,7 +27,7 @@ function App() {
        <Route path="/auth/callback" element={<AuthCallback />} />
        <Route path="/dashboard" element={<Dashboard />} />
        <Route path="/marketplace" element={<Marketplace />} />
-       {/* <Route path="/message" element={<InAppMessanger />} /> */}
+       <Route path="/messages" element={<InAppMessenger />} /> 
        <Route path="/sell" element={<SellItem />} />
      </Routes>
      </BrowserRouter>
