@@ -9,7 +9,7 @@ export function formatUsernameFromEmail(email) {
     
     // Format initials and last name
     if (parts.length >= 2) {
-      const initials = parts[0].split('').map(c => `${c.toUpperCase()}.`).join('');
+      const initials = parts[0].split('').map(c => `${c.toUpperCase()}.`);
       const lastName = parts[1].replace(/\d+/g, ''); // Remove numbers
       return `${initials} ${lastName.charAt(0).toUpperCase()}${lastName.slice(1)}`;
     }
