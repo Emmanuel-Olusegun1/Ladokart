@@ -365,9 +365,8 @@ export default function SellItem() {
 
             <div className="pt-4 border-t border-gray-200">
               <p className="text-xs text-gray-500 mb-4">
-                By posting this listing you agree to LAUTECH Campus Marketplace terms. 
-                Please ensure your listing follows our guidelines. Only verified LAUTECH 
-                students can post listings.
+                By posting this listing you agree to LADOKART Terms and Conditions. 
+                Please ensure your listing follows our guidelines.
               </p>
               
               <div className="flex justify-between">
