@@ -1,15 +1,41 @@
-import { FiSearch, FiBell, FiMessageSquare, FiShoppingCart, FiGrid, FiUser, FiSettings, FiLogOut, FiPlus } from 'react-icons/fi';
+import { useState, useEffect } from 'react';
+import { 
+  FiSearch, FiBell, FiMessageSquare, FiShoppingCart, 
+  FiGrid, FiUser, FiSettings, FiLogOut, FiPlus, 
+  FiMenu, FiX, FiBook, FiHome, FiShoppingBag 
+} from 'react-icons/fi';
+
+import {
+  FaLaptop
+} from 'react-icons/fa';
+
 import { motion } from 'framer-motion';
+import { Link } from 'react-router-dom';
 
 export default function Dashboard() {
-  // Sample data - would come from API in real app
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [windowWidth, setWindowWidth] = useState(window.innerWidth);
+
+  useEffect(() => {
+    const handleResize = () => {
+      setWindowWidth(window.innerWidth);
+      if (window.innerWidth >= 768) {
+        setIsMobileMenuOpen(false);
+      }
+    };
+
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
+  // Sample data
   const categories = [
     { name: 'Textbooks', icon: <FiBook className="text-emerald-500" />, count: 124 },
-    { name: 'Electronics', icon: <FiLaptop className="text-blue-500" />, count: 89 },
+    { name: 'Electronics', icon: <FaLaptop className="text-blue-500" />, count: 89 },
     { name: 'Hostel Items', icon: <FiHome className="text-amber-500" />, count: 76 },
     { name: 'Clothing', icon: <FiShoppingBag className="text-purple-500" />, count: 53 },
   ];
-
+  
   const recentItems = [
     { 
       title: 'Chemistry Textbook 3rd Edition', 
@@ -42,54 +68,81 @@ export default function Dashboard() {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      {/* Navigation Sidebar */}
-      <div className="fixed inset-y-0 left-0 w-64 bg-white shadow-md hidden md:block">
-        <div className="p-6">
-          <div className="flex items-center space-x-2">
-            <div className="w-10 h-10 rounded-lg bg-gradient-to-r from-emerald-500 to-teal-500 flex items-center justify-center text-white font-bold">
-              LK
-            </div>
-            <span className="text-xl font-semibold">Ladokart</span>
+      {/* Mobile Menu Button */}
+      <button 
+        className="md:hidden fixed top-5 right-4 z-50 p-2 rounded-full bg-teal-600 text-white shadow-md cursor-pointer"
+        onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+      >
+        {isMobileMenuOpen ? <FiX className="h-6 w-6" /> : <FiMenu className="h-6 w-6" />}
+      </button>
+
+      {/* Mobile Header Logo */}
+      <div className="md:hidden flex items-center justify-center py-4">
+        <div className="flex items-center space-x-2">
+          <div className="w-8 h-8 rounded-lg bg-gradient-to-r from-emerald-500 to-teal-500 flex items-center justify-center text-white font-bold">
+            LK
           </div>
-        </div>
-        
-        <nav className="mt-8 px-4 space-y-1">
-          <a href="#" className="flex items-center px-4 py-3 text-emerald-600 bg-emerald-50 rounded-lg font-medium">
-            <FiGrid className="mr-3" />
-            Dashboard
-          </a>
-          <a href="#" className="flex items-center px-4 py-3 text-gray-600 hover:bg-gray-100 rounded-lg">
-            <FiShoppingCart className="mr-3" />
-            Marketplace
-          </a>
-          <a href="/marketplace" className="flex items-center px-4 py-3 text-gray-600 hover:bg-gray-100 rounded-lg">
-            <FiMessageSquare className="mr-3" />
-            Messages
-          </a>
-          <a href="#" className="flex items-center px-4 py-3 text-gray-600 hover:bg-gray-100 rounded-lg">
-            <FiUser className="mr-3" />
-            Profile
-          </a>
-          <a href="#" className="flex items-center px-4 py-3 text-gray-600 hover:bg-gray-100 rounded-lg">
-            <FiSettings className="mr-3" />
-            Settings
-          </a>
-        </nav>
-        
-        <div className="absolute bottom-0 w-full p-4">
-          <button className="w-full flex items-center justify-center px-4 py-2 text-gray-600 hover:bg-gray-100 rounded-lg">
-            <FiLogOut className="mr-3" />
-            Sign Out
-          </button>
+          <span className="text-lg font-semibold">Ladokart</span>
         </div>
       </div>
 
+    
+
+      {/* Navigation Sidebar */}
+      {(isMobileMenuOpen || windowWidth >= 768) && (
+        <motion.div 
+          initial={{ x: windowWidth >= 768 ? 0 : -300 }}
+          animate={{ x: 0 }}
+          transition={{ type: 'spring', stiffness: 300, damping: 30 }}
+          className="fixed inset-y-0 left-0 w-64 bg-white shadow-md z-40 md:z-auto"
+        >
+          <div className="p-6">
+            <div className="flex items-center space-x-2">
+              <div className="w-10 h-10 rounded-lg bg-gradient-to-r from-emerald-500 to-teal-500 flex items-center justify-center text-white font-bold">
+                LK
+              </div>
+              <span className="text-xl font-semibold">Ladokart</span>
+            </div>
+          </div>
+          
+          <nav className="mt-8 px-4 space-y-1">
+            <Link to="/dashboard" className="flex items-center px-4 py-3 text-emerald-600 bg-emerald-50 rounded-lg font-medium">
+              <FiGrid className="mr-3" />
+              Dashboard
+            </Link>
+            <Link to="/marketplace" className="flex items-center px-4 py-3 text-gray-600 hover:bg-gray-100 rounded-lg">
+              <FiShoppingCart className="mr-3" />
+              Marketplace
+            </Link>
+            <Link to="/messages" className="flex items-center px-4 py-3 text-gray-600 hover:bg-gray-100 rounded-lg">
+              <FiMessageSquare className="mr-3" />
+              Messages
+            </Link>
+            <Link to="/profile" className="flex items-center px-4 py-3 text-gray-600 hover:bg-gray-100 rounded-lg">
+              <FiUser className="mr-3" />
+              Profile
+            </Link>
+            <Link to="/settings" className="flex items-center px-4 py-3 text-gray-600 hover:bg-gray-100 rounded-lg">
+              <FiSettings className="mr-3" />
+              Settings
+            </Link>
+          </nav>
+          
+          <div className="absolute bottom-0 w-full p-4">
+            <button className="w-full flex items-center justify-center px-4 py-2 text-gray-600 hover:bg-gray-100 rounded-lg">
+              <FiLogOut className="mr-3" />
+              Sign Out
+            </button>
+          </div>
+        </motion.div>
+      )}
+
       {/* Main Content */}
-      <div className="md:ml-64">
+      <div className={`${windowWidth >= 768 ? 'md:ml-64' : ''}`}>
         {/* Top Navigation */}
         <header className="bg-white shadow-sm">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex items-center justify-between">
-            <div className="flex-1 max-w-md">
+            <div className="flex-1 max-w-md ml-0 md:ml-0">
               <div className="relative">
                 <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                   <FiSearch className="text-gray-400" />
@@ -205,9 +258,9 @@ export default function Dashboard() {
           <div className="mt-8">
             <div className="flex items-center justify-between">
               <h2 className="text-lg font-medium text-gray-900">Recently Added</h2>
-              <a href="#" className="text-sm font-medium text-emerald-600 hover:text-emerald-500">
+              <Link to="/marketplace" className="text-sm font-medium text-emerald-600 hover:text-emerald-500">
                 View all
-              </a>
+              </Link>
             </div>
             
             <div className="mt-4 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -257,9 +310,3 @@ export default function Dashboard() {
     </div>
   );
 }
-
-// Add these icons at the top with other imports
-function FiBook(props) { return <svg stroke="currentColor" fill="none" strokeWidth="2" viewBox="0 0 24 24" strokeLinecap="round" strokeLinejoin="round" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg" {...props}><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path></svg> }
-function FiLaptop(props) { return <svg stroke="currentColor" fill="none" strokeWidth="2" viewBox="0 0 24 24" strokeLinecap="round" strokeLinejoin="round" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg" {...props}><rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect><line x1="2" y1="20" x2="22" y2="20"></line></svg> }
-function FiHome(props) { return <svg stroke="currentColor" fill="none" strokeWidth="2" viewBox="0 0 24 24" strokeLinecap="round" strokeLinejoin="round" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg" {...props}><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg> }
-function FiShoppingBag(props) { return <svg stroke="currentColor" fill="none" strokeWidth="2" viewBox="0 0 24 24" strokeLinecap="round" strokeLinejoin="round" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg" {...props}><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path><line x1="3" y1="6" x2="21" y2="6"></line><path d="M16 10a4 4 0 0 1-8 0"></path></svg> }
