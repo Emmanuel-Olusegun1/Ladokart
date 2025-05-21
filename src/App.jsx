@@ -9,7 +9,9 @@ import SignIn from './AuthPages/SignIn.jsx';
 import SignUp from './AuthPages/SignUp.jsx';
 import Dashboard from './Dashboard/Dashboard.jsx';
 import Marketplace from './Dashboard/Marketplace.jsx';
-import AuthCallback from './AuthPages/AuthCallback.jsx'; // Add this import
+import SellItem from './Dashboard/SellItem.jsx';
+import AuthCallback from './AuthPages/AuthCallback.jsx';
+// import InAppMessanger from './Dashboard/InAppMessanger.jsx';
 
 function App() {
   return (
@@ -25,6 +27,8 @@ function App() {
        <Route path="/auth/callback" element={<AuthCallback />} />
        <Route path="/dashboard" element={<Dashboard />} />
        <Route path="/marketplace" element={<Marketplace />} />
+       {/* <Route path="/message" element={<InAppMessanger />} /> */}
+       <Route path="/sell" element={<SellItem />} />
      </Routes>
      </BrowserRouter>
     </>

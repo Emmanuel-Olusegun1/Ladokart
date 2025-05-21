@@ -211,14 +211,15 @@ export default function Dashboard() {
             <p className="mt-2 text-emerald-100">What would you like to do today?</p>
             
             <div className="mt-4 flex flex-wrap gap-3">
-              <motion.button 
+              <motion.a
+              href='/sell' 
                 whileHover={{ y: -2 }}
                 whileTap={{ scale: 0.98 }}
                 className="flex items-center bg-white text-emerald-600 px-4 py-2 rounded-lg font-medium shadow-sm"
               >
                 <FiPlus className="mr-2" />
                 Sell an Item
-              </motion.button>
+              </motion.a>
               
               <motion.a
                 href='/marketplace'
