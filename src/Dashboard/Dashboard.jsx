@@ -4,17 +4,15 @@ import {
   FiGrid, FiUser, FiSettings, FiLogOut, FiPlus, 
   FiMenu, FiX, FiBook, FiHome, FiShoppingBag 
 } from 'react-icons/fi';
-
-import {
-  FaLaptop
-} from 'react-icons/fa';
-
+import { FaLaptop } from 'react-icons/fa';
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
+import { supabase } from '../lib/supabaseClient';
 
 export default function Dashboard() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [windowWidth, setWindowWidth] = useState(window.innerWidth);
+  const [user, setUser] = useState(null);
 
   useEffect(() => {
     const handleResize = () => {
@@ -24,9 +22,34 @@ export default function Dashboard() {
       }
     };
 
+    const fetchUser = async () => {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (user) {
+        setUser(user);
+      }
+    };
+
     window.addEventListener('resize', handleResize);
+    fetchUser();
+
     return () => window.removeEventListener('resize', handleResize);
   }, []);
+
+  const formatUsernameFromEmail = (email) => {
+    if (!email) return 'User';
+    
+    const usernamePart = email.split('@')[0];
+    const match = usernamePart.match(/^([a-z]{1,2})([a-z]+)(\d*)$/i);
+    
+    if (match) {
+      const [_, initialsPart, namePart] = match;
+      const initials = initialsPart.split('').map(c => `${c.toUpperCase()}.`).join(' ');
+      const lastName = namePart.charAt(0).toUpperCase() + namePart.slice(1);
+      return `${initials} ${lastName}`;
+    }
+    
+    return usernamePart;
+  };
 
   // Sample data
   const categories = [
@@ -42,21 +65,21 @@ export default function Dashboard() {
       price: '₦3,500', 
       location: 'Faculty of Science', 
       image: 'https://via.placeholder.com/150',
-      seller: 'Adeola J.'
+      seller: formatUsernameFromEmail('ajohnson@student.lautech.edu.ng')
     },
     { 
       title: 'Mini Fridge 50L', 
       price: '₦15,000', 
       location: 'Hostel B Block', 
       image: 'https://via.placeholder.com/150',
-      seller: 'Chinedu O.'
+      seller: formatUsernameFromEmail('cowojori@student.lautech.edu.ng')
     },
     { 
       title: 'Calculus Study Notes', 
       price: '₦1,200', 
       location: 'Library', 
       image: 'https://via.placeholder.com/150',
-      seller: 'Bisi A.'
+      seller: formatUsernameFromEmail('badeboye@student.lautech.edu.ng')
     },
   ];
 
@@ -85,8 +108,6 @@ export default function Dashboard() {
           <span className="text-lg font-semibold">Ladokart</span>
         </div>
       </div>
-
-    
 
       {/* Navigation Sidebar */}
       {(isMobileMenuOpen || windowWidth >= 768) && (
@@ -167,7 +188,9 @@ export default function Dashboard() {
                     src="https://randomuser.me/api/portraits/women/44.jpg" 
                     alt="User profile" 
                   />
-                  <span className="hidden md:inline text-sm font-medium">Adeola J.</span>
+                  <span className="hidden md:inline text-sm font-medium">
+                    {user ? formatUsernameFromEmail(user.email) : 'User'}
+                  </span>
                 </button>
               </div>
             </div>
@@ -182,7 +205,9 @@ export default function Dashboard() {
             animate={{ opacity: 1, y: 0 }}
             className="bg-gradient-to-r from-emerald-500 to-teal-600 rounded-xl p-6 text-white shadow-lg"
           >
-            <h1 className="text-2xl font-bold">Welcome back, Adeola!</h1>
+            <h1 className="text-2xl font-bold">
+              Welcome back, {user ? formatUsernameFromEmail(user.email) : 'User'}!
+            </h1>
             <p className="mt-2 text-emerald-100">What would you like to do today?</p>
             
             <div className="mt-4 flex flex-wrap gap-3">
@@ -196,7 +221,7 @@ export default function Dashboard() {
               </motion.button>
               
               <motion.a
-                href = '/marketplace'
+                href='/marketplace'
                 whileHover={{ y: -2 }}
                 whileTap={{ scale: 0.98 }}
                 className="flex hover:cursor-pointer items-center bg-white/20 backdrop-blur-sm border border-white/30 px-4 py-2 rounded-lg font-medium"
