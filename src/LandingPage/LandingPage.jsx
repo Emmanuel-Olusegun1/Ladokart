@@ -178,7 +178,6 @@ export default function LandingPage() {
                       {[
                         { icon: <FiBook className="text-emerald-500" />, title: "Chemistry Textbook", price: "₦3,500" },
                         { icon: <FiShoppingCart className="text-emerald-500" />, title: "Hostel Fridge", price: "₦15,000" },
-                        { icon: <FiUsers className="text-emerald-500" />, title: "Study Group", price: "Join Free" }
                       ].map((item, index) => (
                         <div key={index} className="flex items-center justify-between p-2 hover:bg-gray-50 rounded transition">
                           <div className="flex items-center space-x-3">
@@ -235,7 +234,7 @@ export default function LandingPage() {
             <p className="text-lg text-gray-600">Everything you need for safe, convenient campus trading</p>
           </motion.div>
           
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-6xl mx-auto">
+          <div className="grid md:grid-cols-2 lg:grid-cols-2 gap-8 max-w-6xl mx-auto">
             {[
               {
                 icon: <FiCheckCircle className="w-6 h-6 text-emerald-500" />,
@@ -261,18 +260,8 @@ export default function LandingPage() {
                 desc: "From textbooks to gadgets, hostel items to services - all in one place",
                 bg: "bg-emerald-50"
               },
-              {
-                icon: <FiAward className="w-6 h-6 text-emerald-500" />,
-                title: "Reputation System",
-                desc: "Rate transactions to build trust within the LAUTECH community",
-                bg: "bg-emerald-50"
-              },
-              {
-                icon: <FiUsers className="w-6 h-6 text-emerald-500" />,
-                title: "Study Groups",
-                desc: "Find or create study groups for your courses and departments",
-                bg: "bg-emerald-50"
-              }
+            
+          
             ].map((feature, i) => (
               <motion.div 
                 key={i}
